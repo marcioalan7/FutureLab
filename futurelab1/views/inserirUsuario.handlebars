@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insercão de Usuário</title>
+</head>
+<body>
+
+    <form action="/inserirUsuario" method="POST">
+
+    <label>Nome:</label>
+    <input type="text" name="nome">
+
+    <label>Email:</label>
+    <input type="email" name="email">
+
+    <label>Idade:</label>
+    <input type="number" name="idade">
+
+    <label>Tipo:</label>
+    <select name="tipo">
+        <option value="discente">Discente</option>
+        <option value="docente">Docente</option>
+        <option value="coordenador">Coordenador</option>
+    </select>
+
+    <button type="submit">Cadastrar</button>
+
+</form>
+
+</body>
+</html>
