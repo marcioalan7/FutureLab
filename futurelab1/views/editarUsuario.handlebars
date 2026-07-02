@@ -1,0 +1,32 @@
+<form action="/editarUsuario/{{usuario.id}}?_method=PUT" method="POST">
+
+    <input
+        type="text"
+        name="nome"
+        value="{{usuario.nome}}"
+    >
+
+    <input
+        type="email"
+        name="email"
+        value="{{usuario.email}}"
+    >
+
+        <input
+        type="number"
+        name="idade"
+        value="{{usuario.idade}}"
+    >
+
+
+    <select name="tipo">
+
+        <option value="discente">Discente</option>
+        <option value="docente">Docente</option>
+        <option value="coordenador">Coordenador</option>
+
+    </select>
+
+    <button>Atualizar</button>
+
+</form>
