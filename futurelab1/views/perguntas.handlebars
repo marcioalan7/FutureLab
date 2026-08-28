@@ -1,0 +1,28 @@
+<h1>Perguntas</h1>
+
+<a href="/inserirPergunta">Nova pergunta</a>
+<a href="/home">Home</a>
+
+<table border="1">
+    <tr>
+        <th>Pergunta</th>
+    </tr>
+
+    {{#each perguntas}}
+
+    <tr>
+        <td>{{pergunta}}</td>
+
+        <td>
+            <a href="/editarPergunta/{{id}}">Editar</a>
+
+            <form action="/deletarPergunta/{{id}}?_method=DELETE" method="POST">
+                <button>Excluir</button>
+            </form>
+        </td>
+
+    </tr>
+
+    {{/each}}
+
+</table>

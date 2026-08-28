@@ -27,7 +27,89 @@ sequelize.authenticate()
 sequelize.sync()
   .then(() => console.log("Tabela criada!"));
 
-app.get("/", async (req, res) => {
+app.get(
+    '/home',
+    (req, res) => {
+        res.render('home')
+    }
+);
+
+app.get(
+    '/inserirPergunta',
+    async (req, res) => {
+        res.render('inserirPergunta')
+    }
+);
+
+app.post(
+    '/inserirPergunta',
+    async (req, res) => {
+        const { pergunta } = req.body;
+        try { await Pergunta.create({ pergunta });
+        res.redirect('/perguntas');
+    } catch (erro) {
+        console.error('Erro ao inserir pergunta:', erro);
+        res.status(500).send('Erro ao inserir pergunta');
+    }
+    }
+);
+
+app.get(
+    '/perguntas',
+    async (req, res) => {
+    try {
+        const perguntas = await Pergunta.findAll();
+        res.render('perguntas', { perguntas: perguntas.map(pergunta => pergunta.toJSON())});
+    } catch (erro) {
+        console.error('Erro ao buscar perguntas:', erro);
+        res.status(500).send('Erro ao buscar perguntas');
+    }
+    }
+)
+
+app.get(
+    '/editarPergunta/:id',
+    async (req, res) => {
+        const id = req.params.id;
+        const pergunta = await Pergunta.findByPk(id);
+        res.render('editarPergunta', { pergunta: pergunta.toJSON() });
+    }
+);
+
+app.put(
+    '/editarPergunta/:id',
+    async (req, res) => {
+        const { pergunta } = req.body;
+        await Pergunta.update(
+            {
+                pergunta
+            },
+            {
+                where: {
+                    id: req.params.id
+                }
+            }
+        )
+
+        res.redirect('/perguntas');
+    }
+);
+
+app.delete(
+    '/deletarPergunta/:id',
+    async (req, res) => {
+        await Pergunta.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        res.redirect('/perguntas');
+
+    }
+);
+
+/*app.get("/", async (req, res) => {
   const perguntas = await Pergunta.findAll();
 
   let html = `
@@ -70,7 +152,7 @@ app.get("/editar/:id", async (req, res) => {
 
   res.send(`
     <form method="POST" action="/editar/${p.id}">
-      <input name="pergunta" value="${p.pergunta}" required />
+      <input name="pergunta" value="${p.pergunta}" required /inserirPergunta>
       <button>Salvar</button>
     </form>
   `);
@@ -83,13 +165,7 @@ app.post("/editar/:id", async (req, res) => {
   );
 
   res.redirect("/");
-});
-app.get(
-    '/home',
-    (req, res) => {
-        res.render('home')
-    }
-);
+});*/
 
 app.get(
     '/inserirUsuario',
