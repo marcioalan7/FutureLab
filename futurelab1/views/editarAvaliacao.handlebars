@@ -1,0 +1,30 @@
+<h1>Editar Avaliação</h1>
+
+<form action="/editarAvaliacao/{{avaliacao.id}}?_method=PUT" method="POST">
+
+    <label>Nota:</label>
+    <input
+        type="number"
+        name="nota"
+        min="1"
+        max="5"
+        value="{{avaliacao.nota}}"
+        required
+    >
+
+    <br><br>
+
+    <label>Comentário:</label>
+    <input
+        type="text"
+        name="comentario"
+        value="{{avaliacao.comentario}}"
+    >
+
+    <br><br>
+
+    <button type="submit">
+        Salvar Alterações
+    </button>
+
+</form>

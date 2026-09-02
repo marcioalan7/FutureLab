@@ -1,0 +1,62 @@
+<h1>Inserir Avaliação</h1>
+
+<form action="/inserirAvaliacao" method="POST">
+
+    <label>Usuário:</label>
+
+    <select name="usuarioId" required>
+
+        {{#each usuarios}}
+
+            <option value="{{id}}">
+                {{nome}}
+            </option>
+
+        {{/each}}
+
+    </select>
+
+    <br><br>
+
+    <label>Pergunta:</label>
+
+    <select name="perguntaId" required>
+
+        {{#each perguntas}}
+
+            <option value="{{id}}">
+                {{pergunta}}
+            </option>
+
+        {{/each}}
+
+    </select>
+
+    <br><br>
+
+    <label>Nota:</label>
+
+    <input
+        type="number"
+        name="nota"
+        min="1"
+        max="5"
+        required
+    >
+
+    <br><br>
+
+    <label>Comentário:</label>
+
+    <input
+        type="text"
+        name="comentario"
+    >
+
+    <br><br>
+
+    <button type="submit">
+        Avaliar
+    </button>
+
+</form>

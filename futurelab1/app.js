@@ -7,6 +7,7 @@ const methodOverride = require('method-override');
 
 const Usuario = require('./models/inserirUsuario.model')
 const Pergunta = require("./models/Pergunta");
+const Avaliacao = require("./models/Avaliacao");
 
 app.engine(
     'handlebars', 
@@ -27,7 +28,89 @@ sequelize.authenticate()
 sequelize.sync()
   .then(() => console.log("Tabela criada!"));
 
-app.get("/", async (req, res) => {
+app.get(
+    '/home',
+    (req, res) => {
+        res.render('home')
+    }
+);
+
+app.get(
+    '/inserirPergunta',
+    async (req, res) => {
+        res.render('inserirPergunta')
+    }
+);
+
+app.post(
+    '/inserirPergunta',
+    async (req, res) => {
+        const { pergunta } = req.body;
+        try { await Pergunta.create({ pergunta });
+        res.redirect('/perguntas');
+    } catch (erro) {
+        console.error('Erro ao inserir pergunta:', erro);
+        res.status(500).send('Erro ao inserir pergunta');
+    }
+    }
+);
+
+app.get(
+    '/perguntas',
+    async (req, res) => {
+    try {
+        const perguntas = await Pergunta.findAll();
+        res.render('perguntas', { perguntas: perguntas.map(pergunta => pergunta.toJSON())});
+    } catch (erro) {
+        console.error('Erro ao buscar perguntas:', erro);
+        res.status(500).send('Erro ao buscar perguntas');
+    }
+    }
+)
+
+app.get(
+    '/editarPergunta/:id',
+    async (req, res) => {
+        const id = req.params.id;
+        const pergunta = await Pergunta.findByPk(id);
+        res.render('editarPergunta', { pergunta: pergunta.toJSON() });
+    }
+);
+
+app.put(
+    '/editarPergunta/:id',
+    async (req, res) => {
+        const { pergunta } = req.body;
+        await Pergunta.update(
+            {
+                pergunta
+            },
+            {
+                where: {
+                    id: req.params.id
+                }
+            }
+        )
+
+        res.redirect('/perguntas');
+    }
+);
+
+app.delete(
+    '/deletarPergunta/:id',
+    async (req, res) => {
+        await Pergunta.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        res.redirect('/perguntas');
+
+    }
+);
+
+/*app.get("/", async (req, res) => {
   const perguntas = await Pergunta.findAll();
 
   let html = `
@@ -70,7 +153,7 @@ app.get("/editar/:id", async (req, res) => {
 
   res.send(`
     <form method="POST" action="/editar/${p.id}">
-      <input name="pergunta" value="${p.pergunta}" required />
+      <input name="pergunta" value="${p.pergunta}" required /inserirPergunta>
       <button>Salvar</button>
     </form>
   `);
@@ -83,13 +166,7 @@ app.post("/editar/:id", async (req, res) => {
   );
 
   res.redirect("/");
-});
-app.get(
-    '/home',
-    (req, res) => {
-        res.render('home')
-    }
-);
+});*/
 
 app.get(
     '/inserirUsuario',
@@ -169,6 +246,172 @@ app.delete(
     }
 );
 
+app.get(
+    '/inserirAvaliacao',
+    async (req, res) => {
+
+        const usuarios = await Usuario.findAll();
+        const perguntas = await Pergunta.findAll();
+
+        res.render('inserirAvaliacao', {
+            usuarios: usuarios.map(usuario => usuario.toJSON()),
+            perguntas: perguntas.map(pergunta => pergunta.toJSON())
+        });
+    }
+);
+app.post(
+    '/inserirAvaliacao',
+    async (req, res) => {
+
+        const {
+            nota,
+            comentario,
+            usuarioId,
+            perguntaId
+        } = req.body;
+
+        try {
+
+            await Avaliacao.create({
+                nota,
+                comentario,
+                usuarioId,
+                perguntaId
+            });
+
+            res.redirect('/avaliacoes');
+
+        } catch (erro) {
+
+            console.error('Erro ao inserir avaliação:', erro);
+
+            res.status(500).send(
+                'Erro ao inserir avaliação'
+            );
+        }
+    }
+);
+
+app.get(
+    '/avaliacoes',
+    async (req, res) => {
+        try {
+            const avaliacoes = await Avaliacao.findAll();
+
+            res.render('avaliacoes', {
+                avaliacoes: avaliacoes.map(
+                    avaliacao => avaliacao.toJSON()
+                )
+            });
+            
+
+        } catch (erro) {
+            console.error('Erro ao buscar avaliações:', erro);
+            res.status(500).send('Erro ao buscar avaliações');
+        }
+    }
+);
+
+
+
+app.get(
+    '/editarAvaliacao/:id',
+    async (req, res) => {
+
+        try {
+
+            const avaliacao = await Avaliacao.findByPk(
+                req.params.id
+            );
+
+            res.render(
+                'editarAvaliacao',
+                {
+                    avaliacao: avaliacao.toJSON()
+                }
+            );
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao buscar avaliação:',
+                erro
+            );
+
+            res.status(500).send(
+                'Erro ao buscar avaliação'
+            );
+        }
+    }
+);
+
+app.put(
+    '/editarAvaliacao/:id',
+    async (req, res) => {
+
+        try {
+
+            const {
+                nota,
+                comentario
+            } = req.body;
+
+            await Avaliacao.update(
+                {
+                    nota,
+                    comentario
+                },
+                {
+                    where: {
+                        id: req.params.id
+                    }
+                }
+            );
+
+            res.redirect('/avaliacoes');
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao atualizar avaliação:',
+                erro
+            );
+
+            res.status(500).send(
+                'Erro ao atualizar avaliação'
+            );
+        }
+    }
+);
+
+app.delete(
+    '/deletarAvaliacao/:id',
+    async (req, res) => {
+
+        try {
+
+            await Avaliacao.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
+
+            res.redirect('/avaliacoes');
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao excluir avaliação:',
+                erro
+            );
+
+            res.status(500).send(
+                'Erro ao excluir avaliação'
+            );
+        }
+    }
+);
+
 async function conectarBD() {
     try{
         await sequelize.sync();
@@ -177,6 +420,8 @@ async function conectarBD() {
         console.error('Erro ao conectar:', erro);
     }
 };
+
+
 
 conectarBD();
 
