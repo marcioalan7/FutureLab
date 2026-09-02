@@ -7,6 +7,7 @@ const methodOverride = require('method-override');
 
 const Usuario = require('./models/inserirUsuario.model')
 const Pergunta = require("./models/Pergunta");
+const Avaliacao = require("./models/Avaliacao");
 
 app.engine(
     'handlebars', 
@@ -245,6 +246,172 @@ app.delete(
     }
 );
 
+app.get(
+    '/inserirAvaliacao',
+    async (req, res) => {
+
+        const usuarios = await Usuario.findAll();
+        const perguntas = await Pergunta.findAll();
+
+        res.render('inserirAvaliacao', {
+            usuarios: usuarios.map(usuario => usuario.toJSON()),
+            perguntas: perguntas.map(pergunta => pergunta.toJSON())
+        });
+    }
+);
+app.post(
+    '/inserirAvaliacao',
+    async (req, res) => {
+
+        const {
+            nota,
+            comentario,
+            usuarioId,
+            perguntaId
+        } = req.body;
+
+        try {
+
+            await Avaliacao.create({
+                nota,
+                comentario,
+                usuarioId,
+                perguntaId
+            });
+
+            res.redirect('/avaliacoes');
+
+        } catch (erro) {
+
+            console.error('Erro ao inserir avaliação:', erro);
+
+            res.status(500).send(
+                'Erro ao inserir avaliação'
+            );
+        }
+    }
+);
+
+app.get(
+    '/avaliacoes',
+    async (req, res) => {
+        try {
+            const avaliacoes = await Avaliacao.findAll();
+
+            res.render('avaliacoes', {
+                avaliacoes: avaliacoes.map(
+                    avaliacao => avaliacao.toJSON()
+                )
+            });
+            
+
+        } catch (erro) {
+            console.error('Erro ao buscar avaliações:', erro);
+            res.status(500).send('Erro ao buscar avaliações');
+        }
+    }
+);
+
+
+
+app.get(
+    '/editarAvaliacao/:id',
+    async (req, res) => {
+
+        try {
+
+            const avaliacao = await Avaliacao.findByPk(
+                req.params.id
+            );
+
+            res.render(
+                'editarAvaliacao',
+                {
+                    avaliacao: avaliacao.toJSON()
+                }
+            );
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao buscar avaliação:',
+                erro
+            );
+
+            res.status(500).send(
+                'Erro ao buscar avaliação'
+            );
+        }
+    }
+);
+
+app.put(
+    '/editarAvaliacao/:id',
+    async (req, res) => {
+
+        try {
+
+            const {
+                nota,
+                comentario
+            } = req.body;
+
+            await Avaliacao.update(
+                {
+                    nota,
+                    comentario
+                },
+                {
+                    where: {
+                        id: req.params.id
+                    }
+                }
+            );
+
+            res.redirect('/avaliacoes');
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao atualizar avaliação:',
+                erro
+            );
+
+            res.status(500).send(
+                'Erro ao atualizar avaliação'
+            );
+        }
+    }
+);
+
+app.delete(
+    '/deletarAvaliacao/:id',
+    async (req, res) => {
+
+        try {
+
+            await Avaliacao.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
+
+            res.redirect('/avaliacoes');
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao excluir avaliação:',
+                erro
+            );
+
+            res.status(500).send(
+                'Erro ao excluir avaliação'
+            );
+        }
+    }
+);
+
 async function conectarBD() {
     try{
         await sequelize.sync();
@@ -253,6 +420,8 @@ async function conectarBD() {
         console.error('Erro ao conectar:', erro);
     }
 };
+
+
 
 conectarBD();
 
