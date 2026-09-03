@@ -1,38 +1,140 @@
-<h1>Lista de Avaliações</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliações</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="lista-header">
+        <div>
+            <h1>Sistema de Avaliação Docente</h1>
+            <p>Visualização das avaliações</p>
+        </div>
+        {{#if (eq origem "docente")}}
+        <a href="/docente" class="logout-button">
+            Voltar
+        </a>
+        {{else}}
+        <a href="/gestor" class="logout-button">
+            Voltar
+        </a>
+        {{/if}}
+    </header>
 
-<a href="/inserirAvaliacao">
-    Inserir nova avaliação
-</a>
-<a href = "/home">Home</a>
+    <main class="lista-container">
+        <div class="lista-topo">
+            <div>
+                <h2>Avaliações realizadas</h2>
+                <p>
+                    Consulte as avaliações realizadas pelos discentes.
+                </p>
+            </div>
+        </div>
 
-<br><br>
+        {{#if avaliacoes}}
+            <div class="avaliacoes-lista">
+                {{#each avaliacoes}}
+                    <div class="avaliacao-card">
+                        <div class="avaliacao-topo">
+                            <div>
+                                <span class="avaliacao-label">
+                                    Avaliação #{{id}}
+                                </span>
+                                <h3>
+                                    {{docente.nome}}
+                                </h3>
+                            </div>
 
-{{#each avaliacoes}}
+                            <div class="nota">
+                                <span>
+                                    {{nota}}
+                                </span>
+                                <small>
+                                    / 5
+                                </small>
+                            </div>
+                        </div>
 
-    <h3>Avaliação</h3>
+                        <div class="avaliacao-dados">
+                            <div class="avaliacao-dado">
+                                <strong>
+                                    Discente
+                                </strong>
+                                <span>
+                                    {{discente.nome}}
+                                </span>
+                            </div>
 
-    <p>Nota: {{nota}}</p>
+                            <div class="avaliacao-dado">
+                                <strong>
+                                    Docente
+                                </strong>
+                                <span>
+                                    {{docente.nome}}
+                                </span>
+                            </div>
 
-    <p>Comentário: {{comentario}}</p>
+                            <div class="avaliacao-dado pergunta-avaliacao">
+                                <strong>
+                                    Pergunta
+                                </strong>
+                                <span>
+                                    {{pergunta.pergunta}}
+                                </span>
+                            </div>
+                        </div>
 
-    <p>Usuário ID: {{usuarioId}}</p>
+                        <div class="comentario">
+                            <strong>
+                                Comentário
+                            </strong>
+                            {{#if comentario}}
+                                <p>
+                                    "{{comentario}}"
+                                </p>
+                            {{else}}
+                                <p class="sem-comentario">
+                                    Nenhum comentário foi informado.
+                                </p>
+                            {{/if}}
+                        </div>
 
-    <p>Pergunta ID: {{perguntaId}}</p>
+                        {{#if (eq ../origem "gestor")}}
+                            <div class="avaliacao-acoes">
+                                <a href="/editarAvaliacao/{{id}}" class="btn-editar">
+                                    Editar
+                                </a>
 
-    <a href="/editarAvaliacao/{{id}}">
-        Editar
-    </a>
+                            <form action="/deletarAvaliacao/{{id}}?_method=DELETE" method="POST">
+                                <button
+                                    type="submit"
+                                    class="btn-excluir"
+                                    onclick="return confirm('Tem certeza que deseja excluir esta avaliação?')"
+                                    >
+                                    Excluir
+                                </button>
+                            </form>
+                            </div>
+                            {{/if}}
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
 
-    <br><br>
-
-    <form action="/deletarAvaliacao/{{id}}?_method=DELETE" method="POST">
-
-        <button type="submit">
-            Excluir
-        </button>
-
-    </form>
-
-    <hr>
-
-{{/each}}
+            <div class="lista-vazia">
+                <div class="lista-vazia-icon">
+                    📋
+                </div>
+                <h3>
+                    Nenhuma avaliação encontrada
+                </h3>
+                <p>
+                    Ainda não existem avaliações realizadas pelos discentes.
+                </p>
+            </div>
+        {{/if}}
+    </main>
+</body>
+</html>

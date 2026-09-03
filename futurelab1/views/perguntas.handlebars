@@ -1,28 +1,93 @@
-<h1>Perguntas</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perguntas</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="lista-header">
+        <div>
+            <h1>Sistema de Avaliação Docente</h1>
+            <p>Perguntas cadastradas</p>
+        </div>
+        {{#if (eq origem "docente")}}
+            <a href="/docente" class="logout-button">
+            Voltar
+            </a>
+        {{else}}
+            <a href="/gestor" class="logout-button">
+            Voltar
+            </a>
+        {{/if}}
+    </header>
 
-<a href="/inserirPergunta">Nova pergunta</a>
-<a href="/home">Home</a>
+    <main class="lista-container">
+        <div class="lista-topo">
+            <div>
+                <h2>Perguntas</h2>
+                <p>
+                    Gerencie as perguntas utilizadas nas avaliações.
+                </p>
+            </div>
+            {{#if (eq origem "gestor")}}
+                <a href="/inserirPergunta" class="btn-novo">
+                    + Nova pergunta
+                </a>
+            {{/if}}
+        </div>
 
-<table border="1">
-    <tr>
-        <th>Pergunta</th>
-    </tr>
+        {{#if perguntas}}
+            <div class="perguntas-lista">
+                {{#each perguntas}}
+                    <div class="pergunta-item">
+                        <div class="pergunta-numero">
+                            {{id}}
+                        </div>
+                        <div class="pergunta-conteudo">
 
-    {{#each perguntas}}
+                            <span>Pergunta</span>
 
-    <tr>
-        <td>{{pergunta}}</td>
+                            <h3>
+                                {{pergunta}}
+                            </h3>
+                        </div>
+                        {{#if (eq ../origem "gestor")}}
+                        <div class="acoes">
+                            <a href="/editarPergunta/{{id}}" class="btn-editar">
+                                Editar
+                            </a>
 
-        <td>
-            <a href="/editarPergunta/{{id}}">Editar</a>
+                        <form action="/deletarPergunta/{{id}}?_method=DELETE" method="POST">
+                            <button
+                                type="submit"
+                                class="btn-excluir"
+                                onclick="return confirm('Tem certeza que deseja excluir esta pergunta?')"
+                                >
+                                Excluir
+                            </button>
+                        </form>
+                        </div>
+                        {{/if}}
 
-            <form action="/deletarPergunta/{{id}}?_method=DELETE" method="POST">
-                <button>Excluir</button>
-            </form>
-        </td>
-
-    </tr>
-
-    {{/each}}
-
-</table>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="lista-vazia">
+                <div class="lista-vazia-icon">
+                    ❓
+                </div>
+                <h3>Nenhuma pergunta cadastrada</h3>
+                <p>
+                    Ainda não existem perguntas para as avaliações.
+                </p>
+                <a href="/inserirPergunta" class="btn-novo">
+                    Cadastrar pergunta
+                </a>
+            </div>
+        {{/if}}
+    </main>
+</body>
+</html>

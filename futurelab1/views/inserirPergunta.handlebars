@@ -1,20 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insercão de Perguntas</title>
+    <title>Cadastrar Pergunta</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <div class="pergunta-container">
+        <div class="pergunta-card">
+            <div class="pergunta-header">
+                <div class="pergunta-icon">
+                    ❓
+                </div>
+                <h1>Cadastrar Pergunta</h1>
+                <p>
+                    Adicione uma nova pergunta para as avaliações dos docentes.
+                </p>
+            </div>
 
-    <form action="/inserirPergunta" method="POST">
+            <form action="/inserirPergunta" method="POST">
 
-    <label>Pergunta:</label>
-    <input type="text" name="pergunta">
+                <div class="pergunta-form-group"> 
+                    <label for="pergunta">
+                        Pergunta
+                    </label>
 
-    <button type="submit">Cadastrar</button>
+                    <textarea
+                        id="pergunta"
+                        name="pergunta"
+                        placeholder="Digite a pergunta da avaliação..."
+                        rows="4"
+                        required
+                    ></textarea>
+                </div>
 
-</form>
+                <button type="submit" class="btn-cadastrar-pergunta">
+                    Cadastrar pergunta
+                </button>
 
+            </form>
+
+            <a href="/gestor" class="btn-voltar-pergunta">
+                ← Voltar
+            </a>
+
+        </div>
+    </div>
 </body>
 </html>

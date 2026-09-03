@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Gestor - Avaliação Docente</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="gestor-body">
+<header class="gestor-header">
+    <div>
+        <h1>Sistema de Avaliação Docente</h1>
+        <p>Painel do Gestor</p>
+    </div>
+
+    <a href="/login" class="logout-button">Sair</a>
+</header>
+
+<main class="gestor-container">
+
+    <div class="gestor-welcome">
+        <h2>Bem-vindo, Gestor!</h2>
+        <p>Gerencie os usuários, perguntas e avaliações do sistema.</p>
+    </div>
+
+    <section class="gestor-section">
+
+        <h2>Gerenciamento</h2>
+
+        <div class="gestor-grid">
+
+            <a href="/inserirUsuario" class="gestor-card">
+                <div class="card-icon">👤</div>
+                <h3>Cadastrar Usuário</h3>
+                <p>Adicione novos usuários ao sistema.</p>
+            </a>
+
+            <a href="/inserirPergunta" class="gestor-card">
+                <div class="card-icon">❓</div>
+                <h3>Cadastrar Pergunta</h3>
+                <p>Adicione novas perguntas para as avaliações.</p>
+            </a>
+
+        </div>
+
+    </section>
+
+    <section class="gestor-section">
+
+        <h2>Visualização</h2>
+
+        <div class="gestor-grid">
+
+            <a href="/usuarios" class="gestor-card">
+                <div class="card-icon">👥</div>
+                <h3>Usuários</h3>
+                <p>Visualize e gerencie os usuários cadastrados.</p>
+            </a>
+
+            <a href="/gestor/perguntas" class="gestor-card">
+                <div class="card-icon">📋</div>
+                <h3>Perguntas</h3>
+                <p>Visualize e gerencie as perguntas cadastradas.</p>
+            </a>
+
+            <a href="/gestor/avaliacoes" class="gestor-card">
+                <div class="card-icon">📊</div>
+                <h3>Avaliações</h3>
+                <p>Visualize e gerencie as avaliações realizadas.</p>
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+</body>
+</html>

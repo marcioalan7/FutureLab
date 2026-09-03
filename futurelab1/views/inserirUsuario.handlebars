@@ -1,33 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insercão de Usuário</title>
+    <title>Cadastrar Usuário</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <div class="cadastro-container">
+        <div class="cadastro-card">
+            <div class="cadastro-header">
+                <h1>Cadastrar Usuário</h1>
+                <p>Preencha os dados do novo usuário</p>
+            </div>
 
-    <form action="/inserirUsuario" method="POST">
+            <form action="/inserirUsuario" method="POST">
 
-    <label>Nome:</label>
-    <input type="text" name="nome">
+                <div class="form-group">
+                    <label for="nome">Nome completo</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Digite o nome completo"
+                        required
+                    >
+                </div>
 
-    <label>Email:</label>
-    <input type="email" name="email">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Digite o e-mail"
+                        required
+                    >
+                </div>
 
-    <label>Idade:</label>
-    <input type="number" name="idade">
+                <div class="form-group">
+                    <label for="idade">Idade</label>
+                    <input
+                        type="number"
+                        id="idade"
+                        name="idade"
+                        placeholder="Digite a idade"
+                        min="1"
+                    >
+                </div>
 
-    <label>Tipo:</label>
-    <select name="tipo">
-        <option value="discente">Discente</option>
-        <option value="docente">Docente</option>
-        <option value="coordenador">Coordenador</option>
-    </select>
+                <div class="form-group">
+                    <label for="telefone">Telefone</label>
+                    <input
+                        type="tel"
+                        id="telefone"
+                        name="telefone"
+                        placeholder="(00) 00000-0000"
+                    >
+                </div>
 
-    <button type="submit">Cadastrar</button>
+                <div class="form-group">
+                    <label for="tipo">Tipo de usuário</label>
 
-</form>
+                    <select id="tipo" name="tipo" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="discente">Discente</option>
+                        <option value="docente">Docente</option>
+                        <option value="gestor">Gestor</option>
+                    </select>
+                </div>
 
+                <div class="form-group">
+                    <label for="disciplina">Disciplina</label>
+                    <input
+                        type="text"
+                        id="disciplina"
+                        name="disciplina"
+                        placeholder="Ex: Matemática"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="formacao">Formação</label>
+                    <input
+                        type="text"
+                        id="formacao"
+                        name="formacao"
+                        placeholder="Ex: Licenciatura em Matemática"
+                    >
+                </div>
+                <button type="submit" class="btn-cadastrar">
+                    Cadastrar usuário
+                </button>
+            </form>
+            <a href="/gestor" class="btn-voltar">
+                ← Voltar
+            </a>
+        </div>
+    </div>
 </body>
 </html>

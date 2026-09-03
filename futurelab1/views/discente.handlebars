@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Discente</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="perfil-body">
+
+    <header class="perfil-header">
+        <div>
+            <h1>Sistema de Avaliação Docente</h1>
+            <p>Área do Discente</p>
+        </div>
+        <a href="/login" class="logout-button">Sair</a>
+    </header>
+
+    <main class="perfil-container">
+        <section class="perfil-welcome">
+            <h2>Docentes cadastrados</h2>
+            <p>
+                Selecione um docente para visualizar seu perfil
+                ou realizar uma avaliação.
+            </p>
+        </section>
+
+        <section class="docentes-section">
+            {{#if docentes}}
+                <div class="docentes-grid">
+                    {{#each docentes}}
+                        <div class="docente-card">
+                            <div class="docente-icon">
+                                👨‍🏫
+                            </div>
+                            <h3>{{nome}}</h3>
+                            <p class="docente-cargo">
+                                Docente
+                            </p>
+                            <div class="docente-botoes">
+                                <a
+                                    href="/perfilDocente/{{id}}"
+                                    class="botao-perfil"
+                                >
+                                    👤 Ver perfil
+                                </a>
+                                <a
+                                    href="/avaliarDocente/{{id}}"
+                                    class="botao-avaliar"
+                                >
+                                    📝 Avaliar
+                                </a>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            {{else}}
+                <div class="sem-docentes">
+                    <h3>Nenhum docente cadastrado</h3>
+                    <p>
+                        Ainda não existem docentes disponíveis para avaliação.
+                    </p>
+                </div>
+            {{/if}}
+        </section>
+    </main>
+</body>
+</html>

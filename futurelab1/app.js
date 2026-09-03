@@ -9,10 +9,18 @@ const Usuario = require('./models/inserirUsuario.model')
 const Pergunta = require("./models/Pergunta");
 const Avaliacao = require("./models/Avaliacao");
 
+require('./models/relacionamentos')
+
 app.engine(
-    'handlebars', 
-    exphbs.engine( {defaultLayout: false} )
+    'handlebars',
+    exphbs.engine({
+        defaultLayout: false,
+        helpers: {
+            eq: (a, b) => a === b
+        }
+    })
 );
+
 app.set(
     'view engine', 
     'handlebars'
@@ -21,17 +29,98 @@ app.set(
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
+app.use(express.static('public'));
 
-sequelize.authenticate()
+/* sequelize.authenticate()
   .then(() => console.log("Conectado ao banco!"));
 
 sequelize.sync()
-  .then(() => console.log("Tabela criada!"));
+  .then(() => console.log("Tabela criada!"));*/
 
 app.get(
-    '/home',
+    '/login',
     (req, res) => {
-        res.render('home')
+        res.render('login');
+    }
+);
+
+app.post(
+    '/login',
+    (req, res) => {
+        const { usuario, senha } = req.body;
+
+        if (usuario === 'discente' && senha === '1234') {
+            return res.redirect('/discente');
+        }
+
+        if (usuario === 'docente' && senha === '1234') {
+            return res.redirect('/docente');
+        }
+
+        if (usuario === 'gestor' && senha === '1234') {
+            return res.redirect('/gestor');
+        }
+
+        res.render(
+            'login',
+            {
+                erro: 'Usuário ou senha incorretos.'
+            }
+        );
+
+    }
+);
+
+app.get(
+    '/gestor',
+    (req, res) => {
+        res.render('gestor')
+    }
+);
+
+app.get(
+    '/discente', 
+    async (req, res) => {
+    try {
+        const docentes = await Usuario.findAll({
+            where: {
+                tipo: 'docente'
+            }
+        });
+
+        res.render('discente', {
+            docentes: docentes.map(docente => docente.toJSON())
+        });
+
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).send('Erro ao carregar os docentes.');
+    }
+    }
+);
+
+app.get(
+    '/perfilDocente/:id', 
+    async (req, res) => {
+    try {
+        const docente = await Usuario.findByPk(req.params.id);
+        if (!docente) {
+            return res.status(404).send('Docente não encontrado.');
+        }
+        res.render('perfilDocente', {
+            docente: docente.toJSON()
+        });
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).send('Erro ao carregar o perfil.');
+    }
+}
+);
+
+app.get(
+    '/docente', 
+    (req, res) => {
+    res.render('docente');
     }
 );
 
@@ -47,7 +136,7 @@ app.post(
     async (req, res) => {
         const { pergunta } = req.body;
         try { await Pergunta.create({ pergunta });
-        res.redirect('/perguntas');
+        res.redirect('/gestor/perguntas');
     } catch (erro) {
         console.error('Erro ao inserir pergunta:', erro);
         res.status(500).send('Erro ao inserir pergunta');
@@ -56,17 +145,38 @@ app.post(
 );
 
 app.get(
-    '/perguntas',
+    '/docente/perguntas', 
     async (req, res) => {
     try {
         const perguntas = await Pergunta.findAll();
-        res.render('perguntas', { perguntas: perguntas.map(pergunta => pergunta.toJSON())});
+        res.render('perguntas', {
+            perguntas: perguntas.map(
+                pergunta => pergunta.toJSON()
+            ),
+            origem: 'docente'
+        });
     } catch (erro) {
         console.error('Erro ao buscar perguntas:', erro);
         res.status(500).send('Erro ao buscar perguntas');
     }
+});
+
+app.get(
+    '/gestor/perguntas', 
+    async (req, res) => {
+    try {
+        const perguntas = await Pergunta.findAll();
+        res.render('perguntas', {
+            perguntas: perguntas.map(
+                pergunta => pergunta.toJSON()
+            ),
+            origem: 'gestor'
+        });
+    } catch (erro) {
+        console.error('Erro ao buscar perguntas:', erro);
+        res.status(500).send('Erro ao buscar perguntas');
     }
-)
+});
 
 app.get(
     '/editarPergunta/:id',
@@ -92,7 +202,7 @@ app.put(
             }
         )
 
-        res.redirect('/perguntas');
+        res.redirect('/gestor/perguntas');
     }
 );
 
@@ -105,7 +215,7 @@ app.delete(
             }
         })
 
-        res.redirect('/perguntas');
+        res.redirect('/gestor/perguntas');
 
     }
 );
@@ -178,8 +288,8 @@ app.get(
 app.post(
     '/inserirUsuario',
     async (req, res) => {
-        const { nome, email, idade, tipo } = req.body;
-        try { await Usuario.create({ nome, email, idade, tipo });
+        const { nome, email, idade, tipo, telefone, disciplina, formacao } = req.body;
+        try { await Usuario.create({ nome, email, idade, tipo, telefone, disciplina, formacao });
         res.redirect('/usuarios');
     } catch (erro) {
         console.error('Erro ao inserir usuário:', erro);
@@ -246,7 +356,7 @@ app.delete(
     }
 );
 
-app.get(
+/*app.get(
     '/inserirAvaliacao',
     async (req, res) => {
 
@@ -259,6 +369,7 @@ app.get(
         });
     }
 );
+
 app.post(
     '/inserirAvaliacao',
     async (req, res) => {
@@ -290,29 +401,158 @@ app.post(
             );
         }
     }
-);
+);*/
 
-app.get(
-    '/avaliacoes',
+app.post(
+    '/avaliarDocente/:id',
     async (req, res) => {
         try {
-            const avaliacoes = await Avaliacao.findAll();
-
-            res.render('avaliacoes', {
-                avaliacoes: avaliacoes.map(
-                    avaliacao => avaliacao.toJSON()
-                )
+            const docenteId = req.params.id;
+            const discente = await Usuario.findOne({
+                where: {
+                    tipo: 'discente'
+                }
             });
-            
 
+            if (!discente) {
+                return res.status(404).send(
+                    'Nenhum discente encontrado.'
+                );
+            }
+
+            const discenteId = discente.id;
+            const comentario = req.body.comentario;
+            const perguntas = await Pergunta.findAll();
+            for (const pergunta of perguntas) {
+                const nota = req.body[`nota_${pergunta.id}`];
+                if (nota) {
+                    await Avaliacao.create({
+                        nota: nota,
+                        comentario: comentario,
+                        discenteId: discenteId,
+                        docenteId: docenteId,
+                        perguntaId: pergunta.id
+                    });
+
+                }
+            }
+            res.redirect('/discente');
         } catch (erro) {
-            console.error('Erro ao buscar avaliações:', erro);
-            res.status(500).send('Erro ao buscar avaliações');
+            console.error(
+                'Erro ao salvar avaliação:',
+                erro
+            );
+            res.status(500).send(
+                'Erro ao salvar avaliação.'
+            );
         }
     }
 );
 
+app.get(
+    '/avaliarDocente/:id',
+    async (req, res) => {
+        try {
+            const docente = await Usuario.findOne({
+                where: {
+                    id: req.params.id,
+                    tipo: 'docente'
+                }
+            });
 
+            if (!docente) {
+                return res.status(404).send(
+                    'Docente não encontrado.'
+                );
+            }
+            const perguntas = await Pergunta.findAll();
+            res.render('avaliarDocente', {
+                docente: docente.toJSON(),
+                perguntas: perguntas.map(
+                    pergunta => pergunta.toJSON()
+                )
+            });
+        } catch (erro) {
+            console.error(
+                'Erro ao carregar avaliação:',
+                erro
+            );
+            res.status(500).send(
+                'Erro ao carregar avaliação.'
+            );
+        }
+    }
+);
+
+app.get(
+    '/docente/avaliacoes', 
+    async (req, res) => {
+    try {
+        const avaliacoes = await Avaliacao.findAll({
+            include: [
+                {
+                    model: Usuario,
+                    as: 'discente',
+                    attributes: ['id', 'nome']
+                },
+                {
+                    model: Usuario,
+                    as: 'docente',
+                    attributes: ['id', 'nome']
+                },
+                {
+                    model: Pergunta,
+                    as: 'pergunta',
+                    attributes: ['id', 'pergunta']
+                }
+            ]
+        });
+        res.render('avaliacoes', {
+            avaliacoes: avaliacoes.map(
+                avaliacao => avaliacao.toJSON()
+            ),
+            origem: 'docente'
+        });
+    } catch (erro) {
+        console.error('Erro ao buscar avaliações:', erro);
+        res.status(500).send('Erro ao buscar avaliações');
+    }
+});
+
+app.get(
+    '/gestor/avaliacoes', 
+    async (req, res) => {
+    try {
+        const avaliacoes = await Avaliacao.findAll({
+            include: [
+                {
+                    model: Usuario,
+                    as: 'discente',
+                    attributes: ['id', 'nome']
+                },
+                {
+                    model: Usuario,
+                    as: 'docente',
+                    attributes: ['id', 'nome']
+                },
+                {
+                    model: Pergunta,
+                    as: 'pergunta',
+                    attributes: ['id', 'pergunta']
+                }
+            ]
+        });
+        res.render('avaliacoes', {
+            avaliacoes: avaliacoes.map(
+                avaliacao => avaliacao.toJSON()
+            ),
+            origem: 'gestor'
+        });
+    } catch (erro) {
+        console.error('Erro ao buscar avaliações:', erro);
+        res.status(500).send('Erro ao buscar avaliações');
+    }
+});
 
 app.get(
     '/editarAvaliacao/:id',
@@ -368,7 +608,7 @@ app.put(
                 }
             );
 
-            res.redirect('/avaliacoes');
+            res.redirect('/gestor/avaliacoes');
 
         } catch (erro) {
 
@@ -396,7 +636,7 @@ app.delete(
                 }
             });
 
-            res.redirect('/avaliacoes');
+            res.redirect('/gestor/avaliacoes');
 
         } catch (erro) {
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Docente</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="perfil-body">
+    <header class="perfil-header">
+        <div>
+            <h1>Sistema de Avaliação Docente</h1>
+            <p>Perfil do Docente</p>
+        </div>
+        <a href="/discente" class="logout-button">
+            Voltar
+        </a>
+    </header>
+
+    <main class="perfil-container">
+
+        <div class="perfil-docente">
+            <div class="perfil-avatar">
+                👨‍🏫
+            </div>
+            <h2>{{docente.nome}}</h2>
+            <p class="perfil-cargo">
+                Docente
+            </p>
+            <div class="dados-docente">
+
+                <div class="dado">
+                    <strong>Nome:</strong>
+                    <span>{{docente.nome}}</span>
+                </div>
+
+                <div class="dado">
+                    <strong>Idade:</strong>
+                    <span>{{docente.idade}} anos</span>
+                </div>
+
+                <div class="dado">
+                    <strong>Disciplina:</strong>
+                    <span>{{docente.disciplina}}</span>
+                </div>
+
+                <div class="dado">
+                    <strong>Formação:</strong>
+                    <span>{{docente.formacao}}</span>
+                </div>
+
+            </div>
+
+            <a
+                href="/avaliarDocente/{{docente.id}}"
+                class="botao-avaliar grande"
+            >
+                📝 Avaliar este docente
+            </a>
+
+        </div>
+
+    </main>
+</body>
+</html>

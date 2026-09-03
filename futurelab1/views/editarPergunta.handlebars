@@ -1,11 +1,48 @@
-<form action="/editarPergunta/{{pergunta.id}}?_method=PUT" method="POST">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Pergunta</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="editar-body">
+    <main class="editar-container">
+        <div class="editar-header">
+            <span class="editar-icon">❓</span>
+            <h1>Editar Pergunta</h1>
+            <p>Altere o texto da pergunta abaixo.</p>
+        </div>
 
-    <input
-        type="text"
-        name="pergunta"
-        value="{{pergunta.pergunta}}"
-    >
+        <form 
+            action="/editarPergunta/{{pergunta.id}}?_method=PUT" 
+            method="POST" 
+            class="editar-form"
+        >
 
-    <button>Atualizar</button>
+            <div class="campo">
+                <label for="pergunta">Pergunta</label>
 
-</form>
+                <textarea
+                    id="pergunta"
+                    name="pergunta"
+                    rows="5"
+                    placeholder="Digite a pergunta..."
+                    required
+                >{{pergunta.pergunta}}</textarea>
+            </div>
+
+            <div class="editar-acoes">
+                <a href="/gestor/perguntas" class="btn-cancelar">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn-salvar">
+                    Atualizar Pergunta
+                </button>
+            </div>
+
+        </form>
+    </main>
+</body>
+</html>

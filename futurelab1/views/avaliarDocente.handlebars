@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliar Docente</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="perfil-body">
+
+    <header class="perfil-header">
+        <div>
+            <h1>Sistema de Avaliação Docente</h1>
+            <p>Avaliação de docente</p>
+        </div>
+        <a href="/discente" class="logout-button">
+            Voltar
+        </a>
+    </header>
+
+    <main class="perfil-container">
+        <section class="perfil-welcome">
+            <h2>Avaliar {{docente.nome}}</h2>
+            <p>
+                Responda às perguntas abaixo para avaliar o docente.
+            </p>
+        </section>
+
+        <form
+            action="/avaliarDocente/{{docente.id}}"
+            method="POST"
+        >
+
+            {{#each perguntas}}
+
+                <div class="pergunta-avaliacao">
+
+                    <h3>
+                        {{pergunta}}
+                    </h3>
+
+                    <label>
+                        Nota:
+                    </label>
+
+                    <select
+                        name="nota_{{id}}"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="1">
+                            1 - Muito ruim
+                        </option>
+
+                        <option value="2">
+                            2 - Ruim
+                        </option>
+
+                        <option value="3">
+                            3 - Regular
+                        </option>
+
+                        <option value="4">
+                            4 - Bom
+                        </option>
+
+                        <option value="5">
+                            5 - Excelente
+                        </option>
+                    </select>
+                </div>
+            {{/each}}
+
+            <label>
+                Comentário geral:
+            </label>
+
+            <textarea
+                name="comentario"
+                rows="5"
+                placeholder="Digite um comentário..."
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit">
+                Enviar avaliação
+            </button>
+
+        </form>
+    </main>
+</body>
+</html>

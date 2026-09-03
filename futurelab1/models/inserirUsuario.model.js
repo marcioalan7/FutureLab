@@ -20,8 +20,20 @@ const Usuario = sequelize.define(
     },
 
     tipo: {
-        type: DataTypes.ENUM('discente', 'docente', 'coordenador'),
+        type: DataTypes.ENUM('discente', 'docente', 'gestor'),
         allowNull: false
+    },
+     telefone: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+     disciplina: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+     formacao: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
     }
 )

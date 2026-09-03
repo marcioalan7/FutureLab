@@ -18,7 +18,12 @@ const Avaliacao = sequelize.define('Avaliacao', {
         allowNull: true
     },
 
-    usuarioId: {
+    discenteId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+
+    docenteId: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -27,6 +32,11 @@ const Avaliacao = sequelize.define('Avaliacao', {
         type: DataTypes.INTEGER,
         allowNull: false
     }
-});
+},
+{
+    timestamps: true
+}
+
+);
 
 module.exports = Avaliacao;
